@@ -1,0 +1,31 @@
+TARGETS = {
+ 'dcdn': {'label': '全站加速 DCDN', 'credential': 'aliyun', 'required': [], 'defaults': {}},
+ 'fc': {'label': '函数计算 FC', 'credential': 'aliyun', 'required': [],
+        'defaults': {'api_version': '2023-03-30'}},
+ 'ga': {'label': '全球加速 GA', 'credential': 'aliyun', 'required': ['listener_id'],
+        'defaults': {'listener_id': '', 'certificate_role': 'default', 'accelerator_id': ''}},
+ 'oss': {'label': '对象存储 OSS', 'credential': 'aliyun', 'required': ['bucket'], 'defaults': {'bucket': ''}},
+ 'clb': {'label': '传统型负载均衡 CLB', 'credential': 'aliyun', 'required': ['load_balancer_id'],
+         'defaults': {'load_balancer_id': '', 'listener_port': 443, 'domain_extension_id': ''}},
+ 'waf': {'label': 'Web 应用防火墙 WAF', 'credential': 'aliyun', 'required': ['instance_id'],
+         'defaults': {'instance_id': '', 'api_version': '3.0'}},
+ 'waf_cloud': {'label': 'WAF 3.0 云产品接入', 'credential': 'aliyun',
+         'required': ['instance_id', 'resource_instance_id', 'resource_product', 'port', 'replace_certificate_id'],
+         'defaults': {'instance_id': '', 'resource_instance_id': '', 'resource_product': 'clb4',
+                      'port': 443, 'replace_certificate_id': ''}},
+ 'nginx': {'label': 'Nginx / SSH（支持跳板机）', 'credential': 'ssh',
+           'required': ['certificate_path', 'private_key_path'],
+           'defaults': {'certificate_path': '/etc/nginx/ssl/fullchain.pem',
+                        'private_key_path': '/etc/nginx/ssl/privkey.pem',
+                        'test_command': 'nginx -t', 'reload_command': 'systemctl reload nginx'}},
+ 'yunxiao': {'label': '云效流水线 / Nginx', 'credential': 'yunxiao',
+             'required': ['pipeline_id', 'machine_id', 'certificate_path', 'private_key_path'],
+             'defaults': {'pipeline_id': '', 'machine_id': '', 'certificate_path': '/etc/nginx/ssl/fullchain.pem',
+                          'private_key_path': '/etc/nginx/ssl/privkey.pem', 'check_interval_hours': 24}},
+ 'monitor': {'label': 'HTTPS 监控', 'credential': None, 'required': [], 'defaults': {}},
+}
+
+ISSUER_V2 = {'instance_id': '', 'contact_ids': [], 'key_algorithm': 'RSA_2048', 'auto_dns': False,
+             'dns_credential_id': ''}
+ISSUER_V1 = {'product_code': 'digicert-free-1-free', 'contact_name': '', 'phone': '', 'email': '',
+             'auto_dns': False, 'dns_credential_id': '', 'allow_resource_consumption': False, 'order_id': ''}

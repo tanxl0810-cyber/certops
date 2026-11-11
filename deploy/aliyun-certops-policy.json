@@ -1,0 +1,141 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "alidns:DescribeDomainInfo",
+        "alidns:DescribeDomains",
+        "fc:GetCustomDomain",
+        "fc:ListCustomDomains",
+        "fc:UpdateCustomDomain",
+        "oss:ListBuckets",
+        "slb:UploadServerCertificate",
+        "yundun-cert:ApplyCertificate",
+        "yundun-cert:CreateCertificateForPackageRequest",
+        "yundun-cert:DescribeCertificateState",
+        "yundun-cert:GetInstanceDetail",
+        "yundun-cert:GetInstanceSummary",
+        "yundun-cert:GetTaskAttribute",
+        "yundun-cert:GetUserCertificateDetail",
+        "yundun-cert:ListCertificates",
+        "yundun-cert:ListCloudResources",
+        "yundun-cert:ListInstances",
+        "yundun-cert:UpdateInstance",
+        "yundun-cert:UploadUserCertificate",
+        "yundun-waf:CreateCertificateByCertificateId",
+        "yundun-waf:DescribeCloudResourceAccessPortDetails",
+        "yundun-waf:DescribeCloudResources",
+        "yundun-waf:DescribeInstance",
+        "yundun-waf:ModifyCloudResourceCert",
+        "yundun-waf:ModifyDomainCert"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "alidns:AddDomainRecord",
+        "alidns:DescribeDomainRecords"
+      ],
+      "Resource": [
+        "acs:alidns::1234567890123456:domain/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dcdn:DescribeDcdnUserDomains",
+        "dcdn:SetDcdnDomainSSLCertificate"
+      ],
+      "Resource": [
+        "acs:dcdn:*:1234567890123456:domain/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeInstances"
+      ],
+      "Resource": [
+        "acs:ecs:*:1234567890123456:instance/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ga:ListAccelerators"
+      ],
+      "Resource": [
+        "acs:ga:*:1234567890123456:ga/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ga:DescribeListener",
+        "ga:ListListeners",
+        "ga:UpdateAdditionalCertificateWithListener",
+        "ga:UpdateListener"
+      ],
+      "Resource": [
+        "acs:ga:*:1234567890123456:listener/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "oss:ListCname",
+        "oss:PutCname"
+      ],
+      "Resource": [
+        "acs:oss:*:*:*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "slb:SetLoadBalancerHTTPSListenerAttribute"
+      ],
+      "Resource": [
+        "acs:slb:*:1234567890123456:acl/*",
+        "acs:slb:*:1234567890123456:certificate/*",
+        "acs:slb:*:1234567890123456:loadbalancer/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "slb:DescribeServerCertificates"
+      ],
+      "Resource": [
+        "acs:slb:*:1234567890123456:certificate/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "slb:DescribeDomainExtensionAttribute",
+        "slb:DescribeDomainExtensions",
+        "slb:DescribeLoadBalancerAttribute",
+        "slb:DescribeLoadBalancerHTTPSListenerAttribute",
+        "slb:DescribeLoadBalancers",
+        "slb:SetDomainExtensionAttribute"
+      ],
+      "Resource": [
+        "acs:slb:*:1234567890123456:loadbalancer/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "yundun-waf:DescribeDomains"
+      ],
+      "Resource": [
+        "acs:yundun-waf:*:1234567890123456:defenseresource/*"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+name: certops
+
+x-app-environment: &app-environment
+  DATABASE_URL: postgresql+psycopg://certops:${DATABASE_PASSWORD:?Run python3 ops/init.py first}@db:5432/certops
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY:?Run python3 ops/init.py first}
+  PUBLIC_URL: ${PUBLIC_URL:-http://127.0.0.1:18090}
+  APP_VERSION: 1.6.0
+  TZ: ${TZ:-Asia/Shanghai}
+
+x-app-defaults: &app-defaults
+  image: certops:local
+  restart: unless-stopped
+  init: true
+  read_only: true
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 100
+  mem_limit: 512m
+  networks: [default, backend]
+  logging:
+    driver: json-file
+    options: {max-size: 10m, max-file: "3"}
+
+services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run python3 ops/init.py first}
+      CERTOPS_DB_PASSWORD: ${DATABASE_PASSWORD:?Run python3 ops/init.py first}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/postgres-init.sh:/docker-entrypoint-initdb.d/10-certops.sh:ro
+    networks: [backend]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  web:
+    <<: *app-defaults
+    build: .
+    environment:
+      <<: *app-environment
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      FORWARDED_ALLOW_IPS: ${FORWARDED_ALLOW_IPS:-127.0.0.1}
+      FEISHU_APP_ID: ${FEISHU_APP_ID:-}
+      FEISHU_APP_SECRET: ${FEISHU_APP_SECRET:-}
+      FEISHU_TENANT_KEY: ${FEISHU_TENANT_KEY:-}
+      FEISHU_ALLOWED_OPEN_IDS: ${FEISHU_ALLOWED_OPEN_IDS:-}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${HTTP_PORT:-18090}:8090"
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8090/healthz', timeout=4)"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+      start_period: 30s
+
+  worker:
+    <<: *app-defaults
+    environment: *app-environment
+    command: [python, -m, app.worker]
+    depends_on:
+      web: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, python, -c, "from app.db import Session,setting,now; from datetime import datetime; s=Session(); h=setting(s,'worker').get('heartbeat'); assert h and (now()-datetime.fromisoformat(h)).total_seconds()<180"]
+      interval: 60s
+      timeout: 8s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    internal: true
