@@ -1,4 +1,4 @@
-"""Package allowlisted public sources without Git history, local secrets or generated assets."""
+"""Package public sources and reviewed screenshots without Git history or local secrets."""
 from datetime import datetime, timezone
 import importlib.util
 from pathlib import Path

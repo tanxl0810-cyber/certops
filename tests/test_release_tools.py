@@ -64,6 +64,19 @@ class ReleaseTests(unittest.TestCase):
             self.assertIn('cloud-access-key', result)
             self.assertNotIn(fake, result)
 
+    def test_only_approved_plain_png_documentation_images_can_be_packaged(self):
+        image = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aVOsAAAAASUVORK5CYII=')
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            approved = root / 'docs/images/overview.png'
+            approved.parent.mkdir(parents=True)
+            approved.write_bytes(image)
+            (approved.parent / 'unreviewed.png').write_bytes(image)
+            self.assertEqual(check.release_files(root), [approved])
+            self.assertEqual(check.findings(root), [])
+            approved.write_bytes(image + b'private appended metadata')
+            self.assertIn('unapproved metadata', '\n'.join(check.findings(root)))
+
 
 if __name__ == '__main__':
     unittest.main()

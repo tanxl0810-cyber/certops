@@ -59,6 +59,8 @@ GitHub Actions 提供前端构建、Python 测试、发布文件检查、Gitleak
 
 运行 `python ops/package-release.py` 可生成只包含公开源文件的 ZIP，默认保存到 `dist/`。`.env`、Git 元数据、依赖目录、数据库、备份与编译产物不会进入归档。打包前仍需人工检查示例、截图和新增文件。
 
+`docs/images/` 中已人工核对的四张演示 PNG 使用明确文件名白名单进入归档；任意其他截图仍被排除。检查器拒绝这些 PNG 中的文本、EXIF 等附加元数据，图片内文字需要人工确认。更新演示图时同步核对 [截图说明](images/README.md)。
+
 可另外使用 Gitleaks 扫描当前目录与 Git 历史：
 
 ```bash

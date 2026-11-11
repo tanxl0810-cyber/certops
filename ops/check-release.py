@@ -14,6 +14,8 @@ SKIP_DIRS = {'.git', '.venv', 'venv', '__pycache__', 'node_modules', '.pytest_ca
              '.ruff_cache', 'private', 'backups', 'data', 'dist'}
 SOURCE_SUFFIXES = {'.py', '.js', '.mjs', '.vue', '.css', '.html', '.json', '.md',
                    '.yaml', '.yml', '.sh', '.example', '.toml', '.txt'}
+DOCUMENT_IMAGES = {'docs/images/overview.png', 'docs/images/relationships.png',
+                   'docs/images/deployment-preview.png', 'docs/images/tasks.png'}
 PATTERNS = {
     'private-key': re.compile(r'-----BEGIN (?:[A-Z0-9 ]+ )?PRIVATE KEY-----\s+[A-Za-z0-9+/=]{32,}'),
     'cloud-access-key': re.compile(r'\b(?:LTAI[A-Za-z0-9]{16,32}|(?:AKIA|ASIA)[A-Z0-9]{16})\b'),
@@ -42,16 +44,39 @@ def release_files(root):
             if len(relative.parts) == 1:
                 if name in ROOT_FILES:
                     files.append(path)
-            elif (relative.parts[0] in SOURCE_DIRS and path.suffix in SOURCE_SUFFIXES
+            elif (relative.parts[0] in SOURCE_DIRS and (path.suffix in SOURCE_SUFFIXES
+                  or relative.as_posix() in DOCUMENT_IMAGES)
                   and not name.startswith('.env') and not name.endswith('.incomplete')):
                 files.append(path)
     return sorted(files)
+
+
+def plain_png(path):
+    """Approved screenshots allow pixel data only, without text/EXIF metadata."""
+    data = path.read_bytes()
+    if len(data) > 3 * 1024 * 1024 or data[:8] != b'\x89PNG\r\n\x1a\n':
+        return False
+    position = 8
+    while position + 12 <= len(data):
+        length = int.from_bytes(data[position:position + 4], 'big')
+        kind = data[position + 4:position + 8]
+        if kind not in (b'IHDR', b'IDAT', b'IEND') or position + length + 12 > len(data):
+            return False
+        position += length + 12
+        if kind == b'IEND':
+            return length == 0 and position == len(data)
+    return False
 
 
 def findings(root):
     issues = []
     for path in release_files(root):
         relative = path.relative_to(root).as_posix()
+        if relative in DOCUMENT_IMAGES:
+            if not plain_png(path):
+                issues.append(f'{relative}: invalid PNG structure or unapproved metadata')
+            # Pixel content is synthetic and reviewed visually; text scanning is separate.
+            continue
         try:
             content = path.read_text(encoding='utf-8')
         except (UnicodeError, OSError):
