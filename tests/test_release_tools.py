@@ -77,6 +77,16 @@ class ReleaseTests(unittest.TestCase):
             approved.write_bytes(image + b'private appended metadata')
             self.assertIn('unapproved metadata', '\n'.join(check.findings(root)))
 
+    def test_replacing_the_authorized_contact_card_requires_a_new_review(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            approved = root / 'docs/images/wechat-contact.jpg'
+            approved.parent.mkdir(parents=True)
+            approved.write_bytes(b'changed contact image')
+            (approved.parent / 'unreviewed-contact.jpg').write_bytes(b'private image')
+            self.assertEqual(check.release_files(root), [approved])
+            self.assertIn('unreviewed image content', '\n'.join(check.findings(root)))
+
 
 if __name__ == '__main__':
     unittest.main()

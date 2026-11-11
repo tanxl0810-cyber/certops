@@ -1,5 +1,6 @@
 """Check public source candidates without printing matched credential values."""
 import ipaddress
+import hashlib
 import os
 from pathlib import Path
 import re
@@ -15,7 +16,12 @@ SKIP_DIRS = {'.git', '.venv', 'venv', '__pycache__', 'node_modules', '.pytest_ca
 SOURCE_SUFFIXES = {'.py', '.js', '.mjs', '.vue', '.css', '.html', '.json', '.md',
                    '.yaml', '.yml', '.sh', '.example', '.toml', '.txt'}
 DOCUMENT_IMAGES = {'docs/images/overview.png', 'docs/images/relationships.png',
-                   'docs/images/deployment-preview.png', 'docs/images/tasks.png'}
+                   'docs/images/deployment-preview.png', 'docs/images/tasks.png',
+                   'docs/images/system-overview.png', 'docs/images/wechat-contact.jpg'}
+# The maintainer explicitly supplied this public contact card. Its JPEG metadata
+# was reviewed (JFIF/ICC only); require the exact reviewed file for publication.
+REVIEWED_IMAGE_HASHES = {'docs/images/wechat-contact.jpg':
+                       '84e8d7251c1a2bad23839e9b8e6c7289ae9cd5a168159cec7bd5dbddeae9f20b'}
 PATTERNS = {
     'private-key': re.compile(r'-----BEGIN (?:[A-Z0-9 ]+ )?PRIVATE KEY-----\s+[A-Za-z0-9+/=]{32,}'),
     'cloud-access-key': re.compile(r'\b(?:LTAI[A-Za-z0-9]{16,32}|(?:AKIA|ASIA)[A-Z0-9]{16})\b'),
@@ -73,9 +79,12 @@ def findings(root):
     for path in release_files(root):
         relative = path.relative_to(root).as_posix()
         if relative in DOCUMENT_IMAGES:
-            if not plain_png(path):
+            expected_hash = REVIEWED_IMAGE_HASHES.get(relative)
+            if expected_hash and hashlib.sha256(path.read_bytes()).hexdigest() != expected_hash:
+                issues.append(f'{relative}: unreviewed image content')
+            elif not expected_hash and not plain_png(path):
                 issues.append(f'{relative}: invalid PNG structure or unapproved metadata')
-            # Pixel content is synthetic and reviewed visually; text scanning is separate.
+            # Pixel content is reviewed visually; text scanning is separate.
             continue
         try:
             content = path.read_text(encoding='utf-8')

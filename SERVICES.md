@@ -4,6 +4,10 @@ CertOps 的开源软件可以按照 Apache-2.0 许可证免费获取、自行安
 
 业务邮箱：[tanxl0810@gmail.com](mailto:tanxl0810@gmail.com)。首次联系请使用脱敏资料，不要附带 AccessKey、证书私钥、登录密码、生产数据库或完整 `.env`。
 
+也可以扫描下方微信名片联系，备注「CertOps / 部署咨询」，并简要说明使用环境和想解决的问题。名片昵称为 **mmt-m**。
+
+<img src="docs/images/wechat-contact.jpg" alt="维护者微信联系二维码，名片昵称 mmt-m" width="280">
+
 ## 服务内容
 
 | 服务 | 可约定的交付内容 | 报价依据 |
