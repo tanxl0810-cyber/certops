@@ -7,7 +7,7 @@ import re
 import subprocess
 
 ROOT_FILES = {'.gitignore', '.dockerignore', '.gitattributes', '.env.example',
-              'Dockerfile', 'LICENSE', 'NOTICE', 'README.md', 'SERVICES.md',
+              'Dockerfile', 'LICENSE', 'NOTICE', 'README.md', 'README.en.md', 'SERVICES.md',
               'SECURITY.md', 'CONTRIBUTING.md', 'THIRD_PARTY_NOTICES.md',
               'compose.yaml', 'requirements.txt', 'CHANGELOG.md'}
 SOURCE_DIRS = {'app', 'ui', 'ops', 'tests', 'deploy', 'docs', '.github', 'third_party'}

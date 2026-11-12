@@ -1,5 +1,9 @@
 # CertOps · 证书部署与运维控制台
 
+[English](README.en.md) · [国内镜像 Gitee](https://gitee.com/norman-tan/certops) · [首次试用](docs/TRY_IT.md) · [常见问题](docs/FAQ.md) · [项目简介与分享文案](docs/PROJECT_BRIEF.md)
+
+[![Build and test](https://github.com/tanxl0810-cyber/certops/actions/workflows/ci.yml/badge.svg?branch=codex%2Fopen-source)](https://github.com/tanxl0810-cyber/certops/actions/workflows/ci.yml)
+
 **从证书到期提醒，到每个入口的换证与生效检查。**
 
 官网走 DCDN，支付入口在负载均衡上，机房里还跑着几台 Nginx。同一张通配符证书，换一次就要找资源、传文件、重载服务，再逐个打开域名确认有没有生效。入口一多，很容易漏掉一处，或把证书库里的新版本当成线上已经用上的版本。
@@ -118,6 +122,9 @@ ssh -L 18090:127.0.0.1:18090 your-user@your-server
 | 漏洞反馈 | [SECURITY](SECURITY.md) |
 | 贡献约定 | [CONTRIBUTING](CONTRIBUTING.md) |
 | 本次公开版本整理范围 | [RELEASE](docs/RELEASE.md) |
+| 第一次安装和试用 | [TRY_IT](docs/TRY_IT.md) |
+| 能力、费用与使用边界 | [FAQ](docs/FAQ.md) |
+| 项目事实摘要与分享文案 | [PROJECT_BRIEF](docs/PROJECT_BRIEF.md) |
 
 ## 当前边界
 
