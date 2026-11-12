@@ -1,6 +1,8 @@
 # CertOps · 证书部署与运维控制台
 
-[English](README.en.md) · [国内镜像 Gitee](https://gitee.com/norman-tan/certops) · [首次试用](docs/TRY_IT.md) · [常见问题](docs/FAQ.md) · [项目简介与分享文案](docs/PROJECT_BRIEF.md)
+**简体中文 | [English](README.en.md)**
+
+[国内镜像 Gitee](https://gitee.com/norman-tan/certops) · [首次试用](docs/TRY_IT.md) · [常见问题](docs/FAQ.md) · [项目简介与分享文案](docs/PROJECT_BRIEF.md)
 
 [![Build and test](https://github.com/tanxl0810-cyber/certops/actions/workflows/ci.yml/badge.svg?branch=codex%2Fopen-source)](https://github.com/tanxl0810-cyber/certops/actions/workflows/ci.yml)
 
